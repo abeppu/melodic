@@ -66,7 +66,7 @@ export function chord(basenote, chordtype, voice) {
   
   var voices = offsets.map(function(offset){
     var notename = notenames[(start + offset) % notenames.length];
-    return voice(note(notename + "3"));
+    return voice(note(notename + "2"));
   });
   
   
@@ -85,7 +85,7 @@ export function playMeasure(bpm, meter, notes) {
     for(var i=0;i<notes.length;i++) {
       var note = notes[i];
       if (z > note[0] && z < note[1]) {
-         sum += note[2](t);
+         sum += note[2](z - note[0]); // time relativized to note onset
       }
     }
     return sum;
@@ -133,7 +133,7 @@ var noteBasic = {
   "B" : 493.88
 };
 
-function note(notename) {
+export function note(notename) {
   var octave, base, f;
   octave = Number(notename.charAt(notename.length - 1));
   base = notename.substring(0, notename.length - 1);

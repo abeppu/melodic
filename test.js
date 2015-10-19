@@ -3,22 +3,18 @@
  * test
  */
 
-import {playMeasure, chord, womp, ping, crash, blips} from './index';
-
-
+import {pings, crash, playMeasure, note} from './index.js'
 
 export function dsp(t) {
-  //var z = t % 1;
-  //return pings([440,220,330,560], -20)(z);
-  //return blips([440,220, 320], -25)(z);
-  var nnew = 0.2 * playMeasure(160, 4, [[0,1, chord("C", "IV", womp)],
-                                        [1.5, 2, womp(440)],
-                                        [2,3, chord("C", "Maj", womp)]])(t);
-  var ret = Math.max(Math.min(0.85 * last + 0.15 * nnew, 1), -1);
-  last = ret;
-  return ret; 
-
+  var sum = 0.0;
+  var bps = 160;
+  // baseline
+  var bong = pings([note("C3"), note("Eb2")], -20);
+  var baseline = [[0, 0.25, bong], [1.5,2, bong], [2, 2.5, bong]];
+  sum += playMeasure(bps, 4, baseline)(t);
+  
+  // cymbal
+  var cymbal = [[0.5, 0.75, crash(-15)], [2.5, 2.75, crash(-15)], []];
+  sum += playMeasure(bps, 8, cymbal)(t);
+  return sum;
 }
-
-
-var last = 0;
